@@ -1,0 +1,8 @@
+name: TradeShop
+version: '${project.version}'
+main: silverassist.tradeshop.TradeShop
+api-version: 1.17
+
+commands:
+  tradeshop:
+    usage: /tradeshop ...
