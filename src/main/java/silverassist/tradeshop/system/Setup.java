@@ -11,6 +11,7 @@ import silverassist.tradeshop.CustomConfig;
 import silverassist.tradeshop.Util;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class Setup {
     private final JavaPlugin plugin;
@@ -40,6 +41,16 @@ public class Setup {
         if(!CustomConfig.existYml(id))return false;
         SHOP_DATA.put(id,new Buy(this,id));
         return true;
+    }
+
+    public boolean deleteShop(String id){
+        if(!SHOP_DATA.containsKey(id))return false;
+        SHOP_DATA.remove(id);
+        return true;
+    }
+
+    public Set<String> getLoadedShopSet(){
+        return SHOP_DATA.keySet();
     }
 
     private class listener implements Listener {
