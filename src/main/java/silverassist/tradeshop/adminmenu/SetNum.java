@@ -72,7 +72,7 @@ public class SetNum {
         public void onInventoryClose(InventoryCloseEvent e){
             if(!P.equals(e.getPlayer()))return;
             HandlerList.unregisterAll(this);
-            new ShopEdit(P,ID);
+            new ShopEdit(P,ID).open();
         }
         @EventHandler
         public void onInventoryClick(InventoryClickEvent e){
