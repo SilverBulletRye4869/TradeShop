@@ -17,11 +17,12 @@ import silverassist.tradeshop.CustomConfig;
 import silverassist.tradeshop.TradeShop;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static silverassist.tradeshop.Util.*;
 
 public class ShopEdit {
-    private static final int[] ITEM_PLACE = {10,11,12,19,20,21,28,29,30,24};
+    private static final List<Integer> ITEM_PLACE = List.of(10,11,12,19,20,21,28,29,30,24);
     private static final JavaPlugin plugin = TradeShop.getInstance();
 
     private final Player P;
@@ -40,7 +41,7 @@ public class ShopEdit {
     public void open(){
         Inventory inv = Bukkit.createInventory(this.P,54,PREFIX+"§d§lid: "+this.ID+"§a§lの編集画面");
         invFill(inv);
-        for(int i = 0;i<10;i++)inv.setItem(ITEM_PLACE[i], YML.getItemStack("item."+i, new ItemStack(Material.AIR)));
+        for(int i = 0;i<10;i++)inv.setItem(ITEM_PLACE.get(i), YML.getItemStack("item."+i, new ItemStack(Material.AIR)));
         inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+YML.getInt("exp.need",0)));
         inv.setItem(38,createItem(Material.EXPERIENCE_BOTTLE,"§e§l消費経験値: "+YML.getInt("exp.use",0)));
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
@@ -57,7 +58,7 @@ public class ShopEdit {
         public void onInventoryClose(InventoryCloseEvent e){
             if(!e.getPlayer().equals(P))return;
             Inventory inv = e.getInventory();
-            for(int i = 0;i<10;i++)YML.set("item."+i,inv.getItem(ITEM_PLACE[i]));
+            for(int i = 0;i<10;i++)YML.set("item."+i,inv.getItem(ITEM_PLACE.get(i)));
             CustomConfig.saveYmlByID(ID);
             HandlerList.unregisterAll(this);
         }
@@ -66,7 +67,8 @@ public class ShopEdit {
         public void onInventoryClick(InventoryClickEvent e){
             if(!e.getWhoClicked().equals(P))return;
             if(e.getCurrentItem() == null || !e.getClickedInventory().getType().equals(InventoryType.CHEST))return;
-            if(!Arrays.asList(ITEM_PLACE).contains(e.getSlot()))e.setCancelled(true);
+            e.getWhoClicked().sendMessage(ITEM_PLACE+"-"+e.getSlot());
+            if(!ITEM_PLACE.contains(e.getSlot()))e.setCancelled(true);
 
             switch (e.getSlot()){
                 case 37:
