@@ -42,8 +42,12 @@ public class ShopEdit {
         Inventory inv = Bukkit.createInventory(this.P,54,PREFIX+"§d§lid: "+this.ID+"§a§lの編集画面");
         invFill(inv);
         for(int i = 0;i<10;i++)inv.setItem(ITEM_PLACE.get(i), YML.getItemStack("item."+i, new ItemStack(Material.AIR)));
-        inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+YML.getInt("exp.need",0)));
-        inv.setItem(38,createItem(Material.EXPERIENCE_BOTTLE,"§e§l消費経験値: "+YML.getInt("exp.use",0)));
+        inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+YML.getInt("exp.need",0)+"Lv"));
+        inv.setItem(38,createItem(Material.EXPERIENCE_BOTTLE,"§e§l消費経験値: "+YML.getInt("exp.use",0)+"Lv"));
+        inv.setItem(53,YML.getBoolean("isOpen",true) ?
+                createItem(Material.LIME_STAINED_GLASS_PANE,"§6§lショップステータス: §a§l利用可能") :
+                createItem(Material.RED_STAINED_GLASS_PANE,"§6§lショップステータス: §c§l利用不可")
+        );
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
@@ -67,7 +71,6 @@ public class ShopEdit {
         public void onInventoryClick(InventoryClickEvent e){
             if(!e.getWhoClicked().equals(P))return;
             if(e.getCurrentItem() == null || !e.getClickedInventory().getType().equals(InventoryType.CHEST))return;
-            e.getWhoClicked().sendMessage(ITEM_PLACE+"-"+e.getSlot());
             if(!ITEM_PLACE.contains(e.getSlot()))e.setCancelled(true);
 
             switch (e.getSlot()){
@@ -77,7 +80,18 @@ public class ShopEdit {
                 case 38:
                     new SetNum(P,ID,"exp.use").open();
                     return;
+                case 53:
+                    boolean toOpen = e.getCurrentItem().getType().equals(Material.RED_STAINED_GLASS_PANE);
+                    YML.set("isOpen",toOpen);
+                    e.getClickedInventory().setItem(53,toOpen ?
+                            createItem(Material.LIME_STAINED_GLASS_PANE,"§6§lショップステータス: §a§l利用可能") :
+                            createItem(Material.RED_STAINED_GLASS_PANE,"§6§lショップステータス: §c§l利用不可")
+                    );
+                    break;
+                default:
+                    return;
             }
+            CustomConfig.saveYmlByID(ID);
         }
     }
 }
