@@ -6,7 +6,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,7 +46,7 @@ public class ShopList {
         Inventory inv = Bukkit.createInventory(P,54,PREFIX+"§a§lショップ一覧");
         for(int i = page * 45;i<Math.min((page+1)*45,fileNames.size());i++){
             String id = fileNames.get(i);
-            ItemStack item = new ItemStack(CustomConfig.getYmlByID(id).getItemStack("item.9",new ItemStack(Material.AIR)));
+            ItemStack item = new ItemStack(CustomConfig.getYmlByID(id).getItemStack("item.9",new ItemStack(Material.PAPER)));
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName("§6§l"+id);
             item.setItemMeta(meta);
@@ -71,7 +73,7 @@ public class ShopList {
         List<String> fileNames = new ArrayList<>();
         paths.forEach(e ->{
             String fileName = e.getFileName().toString();
-            if(fileName.matches("^"+startRegex+".*\\.yml$")) fileNames.add(fileName.replace("\\.yml$",""));
+            if(fileName.matches("^"+startRegex+".*\\.yml$")) fileNames.add(fileName.replaceAll("\\.yml$",""));
         });
         return fileNames;
     }
@@ -83,5 +85,23 @@ public class ShopList {
             if(!e.getPlayer().equals(P) || unregisterCancel)return;
             HandlerList.unregisterAll(this);
         }
+
+        @EventHandler
+        public void onInventoryClick(InventoryClickEvent e){
+            if(!e.getWhoClicked().equals(P) || e.getCurrentItem()==null)return;
+            e.setCancelled(true);
+            if(!e.getClickedInventory().getType().equals(InventoryType.CHEST))return;
+            int slot = e.getSlot();
+            if(slot < 45)new ShopEdit(P, fileNames.get(Math.min(45*nowPage + slot,fileNames.size() -1))).open();
+            else if(slot == 45 && e.getClickedInventory().getType().equals(Material.RED_STAINED_GLASS_PANE)){
+                unregisterCancel = true;
+                open(nowPage-1);
+            }else if(slot == 53 && e.getClickedInventory().getType().equals(Material.LIME_STAINED_GLASS_PANE)){
+                unregisterCancel = true;
+                open(nowPage+1);
+            }
+        }
+
+
     }
 }
