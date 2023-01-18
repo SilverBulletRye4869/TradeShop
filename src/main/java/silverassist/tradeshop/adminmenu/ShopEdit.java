@@ -42,6 +42,7 @@ public class ShopEdit {
         Inventory inv = Bukkit.createInventory(this.P,54,PREFIX+"§d§lid: "+this.ID+"§a§lの編集画面");
         invFill(inv);
         for(int i = 0;i<10;i++)inv.setItem(ITEM_PLACE.get(i), YML.getItemStack("item."+i, new ItemStack(Material.AIR)));
+        inv.setItem(22,getRightArrowBanner());
         inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+YML.getInt("exp.need",0)+"Lv"));
         inv.setItem(38,createItem(Material.EXPERIENCE_BOTTLE,"§e§l消費経験値: "+YML.getInt("exp.use",0)+"Lv"));
         inv.setItem(53,YML.getBoolean("isOpen",true) ?

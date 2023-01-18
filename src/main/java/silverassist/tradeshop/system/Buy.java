@@ -36,7 +36,7 @@ public class Buy {
     public boolean open(Player p){
         Inventory inv = Bukkit.createInventory(p,54,PREFIX+"§c§l"+this.SHOP_NAME);
         invFill(inv);
-        for (int j : LIME_PLACE) inv.setItem(j, createItem(Material.LIME_STAINED_GLASS_PANE, "§r"));
+        for (int j : LIME_PLACE) inv.setItem(j, createItem(Material.LIME_STAINED_GLASS_PANE, "§a§l中心をクリックしてトレード"));
         for(int i = 0;i < ITEM_PLACE.length/* = 10 */;i++)inv.setItem(ITEM_PLACE[i], this.ITEM[i]);
         inv.setItem(22,getRightArrowBanner());
         if(this.EXP_LV[0]>0)inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+this.EXP_LV[0]+"Lv"));
