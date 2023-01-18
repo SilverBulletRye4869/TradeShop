@@ -16,20 +16,31 @@ import static silverassist.tradeshop.Util.sendPrefixMessage;
 
 public class Command implements CommandExecutor {
     private final Setup SHOP_SYSTEM;
+    private final JavaPlugin plugin;
 
     public Command(JavaPlugin plugin, Setup system){
         this.SHOP_SYSTEM = system;
+        this.plugin = plugin;
         PluginCommand command = plugin.getCommand("tradeshop");
         command.setExecutor(this);
         command.setTabCompleter(new Tab());
     }
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if(!(sender instanceof Player))return true;
+        if(!(sender instanceof Player) || !sender.isOp())return true;
         Player p = (Player) sender;
 
         if(args.length<1){
-            //help
+            for(int i = 0;i<10;i++)p.sendMessage("§r");
+            sendPrefixMessage(p,"§e------------ [TradeShop] ------------");
+            sendPrefixMessage(p,"§a/tradeshop open <id> §d:指定のshopをopen");
+            sendPrefixMessage(p,"§a/tradeshop create <id> §d:shopを作成");
+            sendPrefixMessage(p,"§a/tradeshop edit <id> §d:shopを編集");
+            sendPrefixMessage(p,"§a/tradeshop list §d:shopの一覧を取得");
+            sendPrefixMessage(p,"§a/tradeshop reload [<id>] §d:指定したshopをreload");
+            sendPrefixMessage(p,"§c┗id無指定の場合はconfigをreload");
+            sendPrefixMessage(p,"§a/tradeshop reloadall §d:全てのshopをreload");
+            sendPrefixMessage(p,"§a/tradeshop delete <id> §d:指定したshopを削除");
             return true;
         }
         String id = null;
@@ -58,12 +69,13 @@ public class Command implements CommandExecutor {
 
             case "reload":
                 if(id==null){
-                    //configのreload
-                    return true;
+                    plugin.reloadConfig();
+                    sendPrefixMessage(p,"§aconfig.ymlをreloadしました");
+                }else {
+                    boolean result = SHOP_SYSTEM.reloadShop(id);
+                    if (result) sendPrefixMessage(p, "§a§lSHOPをrelaodしました");
+                    else sendPrefixMessage(p, "§c§lSHOPが存在しません");
                 }
-                boolean result = SHOP_SYSTEM.reloadShop(id);
-                if(result)sendPrefixMessage(p,"§a§lSHOPをrelaodしました");
-                else sendPrefixMessage(p,"§c§lSHOPが存在しません");
                 return true;
             case "reloadall":
                 SHOP_SYSTEM.getLoadedShopSet().forEach(SHOP_SYSTEM::reloadShop);
