@@ -100,7 +100,6 @@ public class SetNum {
                     return;
             }
             CustomConfig.saveYmlByID(ID);
-            //DATA.save(CustomConfig.getYmlFileByID(GACHA_ID));
         }
     }
 }
