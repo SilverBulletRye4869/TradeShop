@@ -34,13 +34,11 @@ public class Buy {
     }
 
     public boolean open(Player p){
-        sendPrefixMessage(p,!YML.getBoolean("isOpen",true)+"-"+!plugin.getConfig().getBoolean("shop-enable",true));
         Inventory inv = Bukkit.createInventory(p,54,PREFIX+"§c§l"+this.SHOP_NAME);
-
         invFill(inv);
         for (int j : LIME_PLACE) inv.setItem(j, createItem(Material.LIME_STAINED_GLASS_PANE, "§r"));
-
         for(int i = 0;i < ITEM_PLACE.length/* = 10 */;i++)inv.setItem(ITEM_PLACE[i], this.ITEM[i]);
+        inv.setItem(22,getRightArrowBanner());
         if(this.EXP_LV[0]>0)inv.setItem(37,createItem(Material.EXPERIENCE_BOTTLE,"§a§l必要経験値: "+this.EXP_LV[0]+"Lv"));
         if(this.EXP_LV[1]>0)inv.setItem(38,createItem(Material.EXPERIENCE_BOTTLE,"§e§l消費経験値: "+this.EXP_LV[1]+"Lv"));
 
@@ -70,7 +68,7 @@ public class Buy {
         p.setLevel(p.getLevel()- EXP_LV[1]);
         p.getInventory().addItem(this.ITEM[9]);
         sendPrefixMessage(p,"§a§lトレード成功！");
-        Log.write(SHOP_NAME,p,this.ITEM[9]);
+        if(plugin.getConfig().getBoolean("log-enable",true))Log.write(SHOP_NAME,p,this.ITEM[9]);
         return true;
     }
 }
