@@ -1,1 +1,2 @@
-shop-enable: true
+shop-enable: true #SHOPを利用可能にするか
+log-enable: true #ログを記録するか
