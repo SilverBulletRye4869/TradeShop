@@ -1,12 +1,17 @@
 package silverassist.tradeshop;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,5 +48,26 @@ public class Util {
 
     public static void sendPrefixMessage(Player p, String msg){
         p.sendMessage(PREFIX+"§r"+msg);
+    }
+
+
+    private static ItemStack rightArrowBanner = null;
+    public static ItemStack getRightArrowBanner(){
+        if(rightArrowBanner == null)setRightArrowBanner();
+        return rightArrowBanner;
+    }
+    private static void setRightArrowBanner(){
+        ItemStack item = new ItemStack(Material.YELLOW_BANNER);
+        BannerMeta bannerMeta = (BannerMeta) item.getItemMeta();
+        List<Pattern> patterns = new ArrayList<>();
+        patterns.add(new Pattern(DyeColor.LIGHT_BLUE, PatternType.BORDER));
+        patterns.add(new Pattern(DyeColor.LIGHT_BLUE, PatternType.HALF_VERTICAL));
+        patterns.add(new Pattern(DyeColor.YELLOW,PatternType.STRIPE_MIDDLE));
+        patterns.add(new Pattern(DyeColor.LIGHT_BLUE,PatternType.STRIPE_TOP));
+        patterns.add(new Pattern(DyeColor.LIGHT_BLUE,PatternType.STRIPE_BOTTOM));
+        patterns.add(new Pattern(DyeColor.LIGHT_BLUE,PatternType.CURLY_BORDER));
+        bannerMeta.setPatterns(patterns);
+        item.setItemMeta(bannerMeta);
+        rightArrowBanner = item;
     }
 }
